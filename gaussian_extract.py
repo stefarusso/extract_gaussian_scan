@@ -12,8 +12,7 @@ import re
 import numpy
 start = []
 end = [] 
-filename= "rrr_t_opt.log"
-#filename = sys.argv[1]
+filename = sys.argv[1]
 openold = open(filename,"r")
 
 
