@@ -12,45 +12,44 @@ import re
 import numpy
 start = []
 end = [] 
-filename = sys.argv[1]
+filename= "rrr_t_opt.log"
+#filename = sys.argv[1]
 openold = open(filename,"r")
 
 
 
 rline = openold.readlines()
 
-count_sp=0
-count_so=0
-
+tmp = []
 for i in range(len(rline)):
+	if "Standard orientation" in rline[i]:	
+		tmp = []
+	tmp.append(i)
 	if "Stationary " in rline[i]:
-		count_sp=1
-	elif "Standard orientation" in rline[i]:
-		count_so=1
-		if count_sp==1 and count_so==1:
-			start.append(i)
-			count_sp=0
-			count_so=0
-		else:
-			count_sp=0
-			count_so=0
+		start.append(tmp[0])
+		tmp=[]
 	else:
-		count_so=0
+		pass
+
+#start contain the start line for the optimized structure which are ended by "Stationary Point" string
+#the first xyz line is the 5th
+
 
 
 for i in start:
-	for m in range (i + 5, len(rline)):
-		if "---" in rline[m]:
-			end.append(m)
-			break
+       for m in range (int(i) + 5, len(rline)):
+               if "---" in rline[m]:
+                       end.append(m)
+                       break
+#end contain the end line of the structures
 
-numero_atomi=end[0]-start[0]-5 
+n_atoms=end[0]-start[0]-5 
 
 
 for i in range(len(start)):
 	newfile = "geom_" + str(i) + ".xyz"
 	opennew = open(newfile,"w")
-	print(r'%i'%numero_atomi, file=opennew)
+	print(r'%i'%n_atoms, file=opennew)
 	print("",file=opennew)
 	for line in rline[start[i]+5 : end[i]] :
 		words = line.split()
